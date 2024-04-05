@@ -1,33 +1,16 @@
 import mongoose from "mongoose";
-// to define the categoris in the nexted schema for product
-// const category_schema = mongoose.Schema(
-//   {
-//     name: {
-//       type: String,
-//       required: true,
-//       enum: ["Clothing", "Gadgets", "Phone", "Computers", "Footwares"],
-//     },
-//     type: [
-//       {
-//         type: String,
-//         required: true,
-//       },
-//     ],
-//   },
-//   { _id: false }
-// );
 const product_Schema = mongoose.Schema(
   {
     name: {
       type: String,
       required: [true, "you must enter a product name"],
     },
-
+    
     rating: {
       type: Number,
       default: 0,
     },
-
+    
     price: {
       type: Number,
       required: [true, " you must enter a product price"],
@@ -56,3 +39,21 @@ const product_Schema = mongoose.Schema(
 
 const products = mongoose.model("product", product_Schema);
 export default products;
+
+// to define the categoris in the nexted schema for product
+// const category_schema = mongoose.Schema(
+//   {
+//     name: {
+//       type: String,
+//       required: true,
+//       enum: ["Clothing", "Gadgets", "Phone", "Computers", "Footwares"],
+//     },
+//     type: [
+//       {
+//         type: String,
+//         required: true,
+//       },
+//     ],
+//   },
+//   { _id: false }
+// );

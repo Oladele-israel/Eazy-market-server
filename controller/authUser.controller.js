@@ -87,12 +87,11 @@ const loginUser = async (req, res) => {
 
   //check if the password is correct
   const validPassword = await bcrypt.compare(password, validEmail.password);
-  console.log(validEmail);
 
   if (!validPassword) {
     res.status(409).json({
       success: false,
-      message: "Invalid credentials.",
+      message: "Invalid password.",
     });
     return;
   }
@@ -101,6 +100,7 @@ const loginUser = async (req, res) => {
   const accessToken = jwt.sign(
     {
       access1: validEmail.username,
+      access2: validEmail._id,
     },
     process.env.ACCESS_TOKEN_SECRET,
     {
@@ -111,6 +111,7 @@ const loginUser = async (req, res) => {
   const refreshToken = jwt.sign(
     {
       access1: validEmail.username,
+      access2: validEmail._id,
     },
     process.env.REFRESH_TOKEN_SECRET,
     {
@@ -119,6 +120,7 @@ const loginUser = async (req, res) => {
   );
   res.cookie("hellobro", accessToken, {
     httpOnly: true,
+    secure: true,
     sameSite: "none",
     maxAge: 5 * 60 * 1000,
   });
@@ -133,9 +135,10 @@ const loginUser = async (req, res) => {
   return res.status(200).json({
     success: true,
     message: "Login successful.",
-    accessToken,
   });
 };
 
 
-export { createUser, loginUser, getUsers,};
+
+export { createUser, loginUser, getUsers };
+//persistence user login

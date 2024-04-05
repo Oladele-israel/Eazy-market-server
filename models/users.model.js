@@ -20,7 +20,6 @@ const user = mongoose.Schema(
     },
     photo: {
       type: String,
-      require: true,
     },
     password: {
       type: String,
