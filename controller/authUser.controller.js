@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import jwt, { decode } from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 import express from "express";
+import { Admin } from "mongodb";
 const app = express();
 app.use(cookieParser());
 
@@ -45,13 +46,6 @@ const createUser = async (req, res) => {
       });
     }
 
-    //validating the phone number
-    if (!phoneNumber || phoneNumber.length !== 11) {
-      return res.status(406).json({
-        message: "phone number not applicable",
-      });
-    }
-
     //using bcryptjs to hash password
     const salt = await bcrypt.genSalt(15);
     const saltedPass = await bcrypt.hash(password, salt);
@@ -64,10 +58,12 @@ const createUser = async (req, res) => {
       phoneNumber,
     });
 
+    // Destructure _doc and exclude password
+    const { password: userPassword, ...rest } = created_User._doc;
+
     res.status(201).json({
       success: true,
       message: "user created succesfully",
-      created_User,
     });
   } catch (error) {
     res.status(500).json({
@@ -116,7 +112,7 @@ const loginUser = async (req, res) => {
     },
     process.env.ACCESS_TOKEN_SECRET,
     {
-      expiresIn: "30s",
+      expiresIn: "60s",
     }
   );
 
@@ -130,6 +126,15 @@ const loginUser = async (req, res) => {
       expiresIn: "1d",
     }
   );
+
+  //passing the user data
+  const userData = {
+    name: validEmail.name,
+    username: validEmail.username,
+    Admin: validEmail.Admin,
+    phoneNumber: validEmail.phoneNumber,
+  };
+  //push to cookie for storage
   res.cookie("hellobro", accessToken, {
     httpOnly: true,
     secure: true,
@@ -147,8 +152,27 @@ const loginUser = async (req, res) => {
   return res.status(200).json({
     success: true,
     message: "Login successful.",
+    userData,
   });
 };
 
-export { createUser, loginUser, getUsers };
+const validateToken = (req, res) => {
+  const authUser = req.userData;
+  const currentUser = {
+    _id: authUser._id,
+    name: authUser.name,
+    username: authUser.username,
+    email: authUser.email,
+    bio: authUser.bio,
+    phone_number: authUser.phone_number,
+    isAdmin: authUser.isAdmin,
+  };
+  res.status(200).json({
+    success: true,
+    message: "Authorized",
+    userDetail: currentUser,
+  });
+};
+
+export { createUser, loginUser, getUsers, validateToken };
 //persistence user login
