@@ -5,9 +5,17 @@ import productRoutes from "./routes/products.routes.js";
 import userRouter from "./routes/user.routes.js";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import cors from "cors";
+
 // middleware to accept jsson
 app.use(express.json());
 app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 //configuring the environmental variables path
 dotenv.config();

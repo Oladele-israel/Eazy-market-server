@@ -1,7 +1,7 @@
 import express from "express";
 import cookieParser from "cookie-parser";
+import { checkAndRenewToken } from "../middleware/validatoken.js";
 
-import LoginLimiter from "../middleware/loginLimiter.js";
 import {
   createUser,
   loginUser,
@@ -13,7 +13,9 @@ const userRouter = express.Router();
 
 userRouter.get("/", getUsers);
 userRouter.post("/signup", createUser);
-userRouter.post("/login", LoginLimiter, loginUser);
+userRouter.post("/login", loginUser);
+userRouter.get("validateToken", checkAndRenewToken);
+// userRouter.delete("/delete", deleteUser )
 
 // userRouter.use(verifyJWT
 

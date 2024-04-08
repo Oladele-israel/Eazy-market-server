@@ -18,18 +18,19 @@ const user = mongoose.Schema(
       require: true,
       lowercase: true,
     },
-    photo: {
-      type: String,
-    },
     password: {
       type: String,
       require: true,
-      select: true,
     },
-    isAdmin:{
+    isAdmin: {
       type: Boolean,
       default: false,
-    }
+    },
+    phoneNumber: {
+      type: Number,
+      default: 0,
+      require: true,
+    },
   },
   {
     timestamps: true,

@@ -24,8 +24,9 @@ const getUsers = async (req, res) => {
 };
 //signing up users
 const createUser = async (req, res) => {
+  console.log(req.body);
   try {
-    const { name, username, email, photo, password } = req.body;
+    const { name, username, email, password, phoneNumber } = req.body;
     //vetting username because on tow person could bear one name
     const validUserName = await users.findOne({ username: username }).exec();
     if (validUserName) {
@@ -42,19 +43,25 @@ const createUser = async (req, res) => {
         success: false,
         message: "Please provide a valid email address",
       });
-      return;
     }
+
+    //validating the phone number
+    if (!phoneNumber || phoneNumber.length !== 11) {
+      return res.status(406).json({
+        message: "phone number not applicable",
+      });
+    }
+
     //using bcryptjs to hash password
     const salt = await bcrypt.genSalt(15);
     const saltedPass = await bcrypt.hash(password, salt);
 
-    //above all the logic goes:
     const created_User = await users.create({
       name,
       username,
       email,
-      photo,
       password: saltedPass,
+      phoneNumber,
     });
 
     res.status(201).json({
@@ -73,7 +80,9 @@ const createUser = async (req, res) => {
 
 //compare pasword function
 const loginUser = async (req, res) => {
+  console.log(req.body);
   const { email, password } = req.body;
+
   //check if email is valid in the database
   const validEmail = await users.findOne({ email: email }).exec();
 
@@ -84,10 +93,13 @@ const loginUser = async (req, res) => {
     });
     return;
   }
-
+  console.log(validEmail);
   //check if the password is correct
-  const validPassword = await bcrypt.compare(password, validEmail.password);
-
+  const validPassword = await bcrypt.compare(
+    req.body.password,
+    validEmail.password
+  );
+  console.log("this is the valid pass", validPassword);
   if (!validPassword) {
     res.status(409).json({
       success: false,
@@ -104,7 +116,7 @@ const loginUser = async (req, res) => {
     },
     process.env.ACCESS_TOKEN_SECRET,
     {
-      expiresIn: "5m",
+      expiresIn: "30s",
     }
   );
 
@@ -122,7 +134,7 @@ const loginUser = async (req, res) => {
     httpOnly: true,
     secure: true,
     sameSite: "none",
-    maxAge: 5 * 60 * 1000,
+    maxAge: 30 * 1000,
   });
   res.cookie("hellosis", refreshToken, {
     httpOnly: true,
@@ -137,8 +149,6 @@ const loginUser = async (req, res) => {
     message: "Login successful.",
   });
 };
-
-
 
 export { createUser, loginUser, getUsers };
 //persistence user login
