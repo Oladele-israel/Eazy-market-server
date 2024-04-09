@@ -5,7 +5,7 @@ import {
   singleCategory,
   deleteCategory,
   updateCategory,
-} from "../Controller/CategoryControllers.js";
+} from "../controller/category.controller.js";
 const router = express.Router();
 router.post("/new-category", createCategory);
 router.get("/all-categories", allCategories);

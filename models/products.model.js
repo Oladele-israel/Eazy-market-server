@@ -5,12 +5,13 @@ const product_Schema = mongoose.Schema(
       type: String,
       required: [true, "you must enter a product name"],
     },
-    
+
     rating: {
       type: Number,
       default: 0,
+      required: true,
     },
-    
+
     price: {
       type: Number,
       required: [true, " you must enter a product price"],
@@ -18,10 +19,10 @@ const product_Schema = mongoose.Schema(
     },
     color: {
       type: String,
-      required: false,
     },
     photo: {
       type: String,
+      required: true,
     },
 
     size: {
@@ -29,7 +30,7 @@ const product_Schema = mongoose.Schema(
     },
     category: {
       type: String,
-      required: true,
+      required: true["please enter category"],
     },
   },
   {

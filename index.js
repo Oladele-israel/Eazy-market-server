@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const app = express(); //initializing the express
 import productRoutes from "./routes/products.routes.js";
 import userRouter from "./routes/user.routes.js";
+import categoryRoutes from "./routes/category.routes.js";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -22,6 +23,7 @@ dotenv.config();
 //defining route,
 app.use("/product", productRoutes);
 app.use("/user", userRouter);
+app.use("/category", categoryRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({ massage: "hello from this server" });
