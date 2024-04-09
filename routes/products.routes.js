@@ -14,6 +14,6 @@ router.get("/all",  get_all_Products);
 router.get("/:id", singleProduct);
 router.post("/",  productPost);
 router.put("/:id",  productUpdate);
-router.delete("/delete-product:id", productDelete);
+router.delete("/:id", productDelete);
 
 export default router;
