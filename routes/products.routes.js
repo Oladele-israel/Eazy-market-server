@@ -10,10 +10,10 @@ import { checkAndRenewToken } from "../middleware/validatoken.js";
 import products from "../models/products.model.js";
 const router = express.Router();
 
-router.get("/all",  get_all_Products);
-router.get("/:id", singleProduct);
-router.post("/",  productPost);
-router.put("/:id",  productUpdate);
-router.delete("/:id", productDelete);
+router.get("/all",checkAndRenewToken, get_all_Products);
+router.get("/:id", checkAndRenewToken, singleProduct);
+router.post("/", checkAndRenewToken, productPost);
+router.put("/:id", productUpdate);
+router.delete("/:id",checkAndRenewToken, productDelete);
 
 export default router;
